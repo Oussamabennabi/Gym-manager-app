@@ -5,8 +5,8 @@ export const styles = {
     alignItems: "center",
   },
   modalBox: {
-    width: 600,
-    height: 400,
+    width: 700,
+    maxHeight:"90%",
     backgroundColor: "white",
     borderRadius: "1rem",
     padding:"1rem 1rem"

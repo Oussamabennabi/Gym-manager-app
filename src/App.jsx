@@ -31,14 +31,14 @@ function App() {
         open={addMemberModalOpen}
         setOpen={setAddMemberModalOpen}
       />
-      <EditMemberModel
+      {/* <EditMemberModel
         open={editMemberModalOpen}
         setOpen={setEditMemberModalOpen}
       />
       <DeleteMemberModel
         open={deleteMemberModalOpen}
         setOpen={setDeleteMemberModalOpen}
-      />
+      /> */}
     </div>
   );
 }

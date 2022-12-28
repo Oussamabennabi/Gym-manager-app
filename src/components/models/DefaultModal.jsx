@@ -1,12 +1,18 @@
 import React from "react";
 
-import { Box, Card, CardHeader, Modal,Button, Typography } from "@mui/material";
+import { Box, Modal, Button, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { styles } from "./modals.style";
-const DefaultModal = ({ open, setOpen, children, modalHeaderTitle }) => {
+const DefaultModal = ({
+  open,
+  setOpen,
+  children,
+  modalHeaderTitle,
+  customStyles,
+}) => {
   return (
     <Modal
-      sx={styles.modalContainer}
+      sx={{ ...styles.modalContainer, ...customStyles }}
       open={open}
       keepMounted
       onClose={() => setOpen(false)}
@@ -40,7 +46,7 @@ const DefaultModal = ({ open, setOpen, children, modalHeaderTitle }) => {
           </Button>
         </Box>
 
-        {children}
+      {children}
       </Box>
     </Modal>
   );
