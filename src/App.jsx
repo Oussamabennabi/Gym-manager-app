@@ -7,7 +7,8 @@ import DeleteMemberModel from './components/models/DeleteMemberModel';
 import AllMembersList from './components/AllMembersList';
 import MemberInfo from './components/MemberInfo';
 import Navbar from './components/Navbar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
 
 
 
@@ -31,14 +32,14 @@ function App() {
         open={addMemberModalOpen}
         setOpen={setAddMemberModalOpen}
       />
-      <EditMemberModel
+      {/* <EditMemberModel
         open={editMemberModalOpen}
         setOpen={setEditMemberModalOpen}
       />
       <DeleteMemberModel
         open={deleteMemberModalOpen}
         setOpen={setDeleteMemberModalOpen}
-      />
+      /> */}
     </div>
   );
 }

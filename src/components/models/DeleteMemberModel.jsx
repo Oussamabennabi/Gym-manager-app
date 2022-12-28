@@ -1,8 +1,8 @@
 import React from 'react'
-
-const DeleteMemberModel = () => {
+import DefaultModal from './DefaultModal'
+const DeleteMemberModel = ({open,setOpen}) => {
   return (
-    <DefaultModal customStyles={ {}} modalHeaderTitle={"Add A member"} open={open} setOpen={setOpen}>
+    <DefaultModal customStyles={ {}} modalHeaderTitle={"Delete A member"} open={open} setOpen={setOpen}>
       Form of deleting a member
     </DefaultModal>
   )
