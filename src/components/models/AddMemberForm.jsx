@@ -20,6 +20,7 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import ImageIcon from "@mui/icons-material/Image";
 
+// webcame
 // modal
 import CameraModal from "./CameraModal";
 const membershipsPlans = {
@@ -76,7 +77,7 @@ const AddMemberForm = ({ setModalOpen }) => {
     setFullName("");
     setPhoneNumber("");
     setPaidAmount(0);
-    setPhoto(null);
+    setPhoto("");
     setModalOpen(false);
   }
 
