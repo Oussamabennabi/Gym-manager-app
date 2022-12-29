@@ -62,6 +62,7 @@ export default function Camera({ open, setOpen,setpicture }) {
               onClick={() => {
                 const imageSrc = getScreenshot();
                 setpicture(imageSrc)
+                setOpen(false)
               }}
               sx={{fontWeight:"bold",textTransform:"none"}}
               variant="contained"
@@ -76,16 +77,3 @@ export default function Camera({ open, setOpen,setpicture }) {
 }
 
 
-    
-      //  const url = "data:image/png;base6....";
-      //  fetch(url)
-      //    .then((res) => res.blob())
-      //    .then((blob) => {
-      //      const file = new File([blob], "File name", { type: "image/png" });
-      //    });
-        
-      // const imageSrc = webcamRef.current.getScreenshot();
-      // const blob = await fetch(imageSrc).then((res) => res.blob());
-      // const formData = new FormData();
-
-      // formData.append("images", blob);

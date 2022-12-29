@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
-import { Box } from "@mui/material"
-
+import { DataGrid, GridToolbar, GridToolbarDensitySelector } from "@mui/x-data-grid";
+import { Box, Button } from "@mui/material";
+import { formatDate } from "../utils/formatDate";
+import EditIcon from "@mui/icons-material/Edit";
+import { useCallback } from "react"
 const cols = [
   {
     field: "photo",
     headerName: "Photo",
-    width: 180,
+    minWidth: 180,
+    flex: 1,
     renderCell: (params) => {
       return (
         <div>
@@ -24,59 +27,113 @@ const cols = [
       );
     },
   },
-  { field: "fullName", headerName: "Full name", width: 180 },
-  { field: "phoneNumber", headerName: "Phone number", width: 120 },
+  { field: "fullName", headerName: "Full name", minWidth: 180, flex: 1 },
+  { field: "phoneNumber", headerName: "Phone number", minWidth: 140, flex: 1 },
+
+  {
+    field: "age",
+    headerName: "Age",
+    type: "number",
+    minWidth: 90,
+    flex: 1,
+    headerAlign: "left",
+    align: "left",
+  },
   {
     field: "startDate",
     headerName: "Start date",
-    width: 160,
+    minWidth: 150,
     type: "dateTime",
-    valueGetter: ({ value }) => value && new Date(value),
+    valueGetter: ({ value }) => value && formatDate(value),
+    align: "left",
+    flex: 1,
   },
   {
     field: "endDate",
     headerName: "End date",
-    width: 160,
+    minWidth: 150,
     type: "dateTime",
-    valueGetter: ({ value }) => value && new Date(value),
+    valueGetter: ({ value }) => value && formatDate(value),
+    align: "left",
+    flex: 1,
   },
   {
     field: "totalAmount",
     headerName: "Total amount",
-    width: 120,
+    minWidth: 120,
     type: "number",
+    align: "left",
+    headerAlign: "left",
+    flex: 1,
   },
-  { field: "paidAmount", headerName: "Paid", width: 120, type: "number" },
+  {
+    field: "paidAmount",
+    headerName: "Paid",
+    minWidth: 120,
+    type: "number",
+    headerAlign: "left",
+    flex: 1,
+    align: "left",
+  },
   {
     field: "amountLeft",
     headerName: "Amount left",
-    width: 120,
+    minWidth: 120,
     type: "number",
+    align: "left",
+    headerAlign: "left",
+    flex: 1,
   },
   {
     field: "membership",
     headerName: "Membership plan",
-    width: 140,
+    minWidth: 140,
+    align: "left",
+    headerAlign: "left",
+    flex: 1,
   },
-
-  // {
-  //   field: "age",
-  //   headerName: "Age",
-  //   type: "number",
-  //   width: 90,
-  // },
+ 
 ];
-const AllMembersList = ({ members = [] }) => {
-
+const AllMembersList = ({ members = [], setEditMemberModalOpen,setMemberId }) => {
+  const newCols = useCallback(
+    () => [
+      ...cols,
+      {
+        field:"Edit",
+        headerName: "Edit",
+        minWidth: 140,
+        align: "center",
+        headerAlign: "center",
+        flex: 1,
+        renderCell: (params) => {
+          return (
+            <div>
+              <Button
+                onClick={() => {
+                  setEditMemberModalOpen(true);
+                  setMemberId(params.id)
+                }}
+              >
+                <EditIcon />
+              </Button>
+            </div>
+          );
+        },
+      },
+    ],
+    []
+  );
   return (
     <div style={{ height: "90vh", width: "100%" }}>
-      
-
       <DataGrid
         rows={members}
-        columns={cols}
+        columns={newCols()}
+        components={{
+          Toolbar: GridToolbar,
+        }}
         pageSize={5}
         rowHeight={150}
+        rowSpacingType="margin"
         rowsPerPageOptions={[5]}
       />
     </div>

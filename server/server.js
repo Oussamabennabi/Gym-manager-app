@@ -39,19 +39,16 @@ app.get("/", (req, res) => {
 
 app.post("/addMember", upload.single("photoUpload"),(req, res,next) => {
 
-  console.log(req.file);
+  console.log("server",req.file);
   fs.readFile(DATA_PATH, function (err, d) {
     if(err) return res.status(401).send("there is somthing wrong with reading the file")
     var json = JSON.parse(d);
-    if (d === null || d === undefined || d=== "") {
-      fs.writeFile(DATA_PATH, "[]", (err) => {
-        console.log(err);
-      });
-
-    }
+    // if (d === null || d === undefined || d=== "") {
+    //   fs.writeFile(DATA_PATH, "[]", (err) => {
+    //     console.log(err);
+    //   });
+    // }
     json.push(req.body);
-    
-
     fs.writeFile(DATA_PATH, JSON.stringify(json), (err) => {
     if (err)
       return res
@@ -64,6 +61,15 @@ app.post("/addMember", upload.single("photoUpload"),(req, res,next) => {
 
 });
 
-
+app.get('/members/:id', (req, res) => {
+  fs.readFile(DATA_PATH, function (err, d) { 
+    if(err) return res.status(401).send("there is somthing wrong with list of member")    
+    var json = JSON.parse(d);
+    console.log(json)
+    const data = json.filter((member=>member.id===req.params.id))
+    
+    res.status(200).send(data)
+  })
+}) 
 
 app.listen(3001);

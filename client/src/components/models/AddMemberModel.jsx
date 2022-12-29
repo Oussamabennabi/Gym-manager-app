@@ -1,6 +1,6 @@
 import React from "react";
 import DefaultModal from "./DefaultModal"
-import AddMemberForm from "./AddMemberForm";
+import MemberInfoCard from "./MemberInfoCard";
 const AddMemberModel = ({ open, setOpen,fetchMembers }) => {
   return (
     <DefaultModal
@@ -8,7 +8,7 @@ const AddMemberModel = ({ open, setOpen,fetchMembers }) => {
       open={open}
       setOpen={setOpen}
     >
-      <AddMemberForm setModalOpen={setOpen} fetchMembers={fetchMembers} />
+      <MemberInfoCard setModalOpen={setOpen}  fetchMembers={fetchMembers} />
     </DefaultModal>
   );
 };
