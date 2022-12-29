@@ -5,8 +5,8 @@ import Webcam from "react-webcam";
 import DefaultModal from "./DefaultModal";
 export default function Camera({ open, setOpen,setpicture }) {
   const videoConstraints = {
-    width: 500,
-    height: 500,
+    width: 400,
+    height: 400,
     facingMode: "user",
   };
 
@@ -51,9 +51,10 @@ export default function Camera({ open, setOpen,setpicture }) {
         <Webcam
           style={{ borderRadius: "1rem", margin: "1rem auto" }}
           audio={false}
-          height={500}
           screenshotFormat="image/jpeg"
-          width={500}
+          height={400}
+          width={400}
+     
           videoConstraints={videoConstraints}
         >
           {({ getScreenshot }) => (
@@ -62,6 +63,7 @@ export default function Camera({ open, setOpen,setpicture }) {
                 const imageSrc = getScreenshot();
                 setpicture(imageSrc)
               }}
+              sx={{fontWeight:"bold",textTransform:"none"}}
               variant="contained"
             >
               Capture photo
@@ -72,3 +74,18 @@ export default function Camera({ open, setOpen,setpicture }) {
     </DefaultModal>
   );
 }
+
+
+    
+      //  const url = "data:image/png;base6....";
+      //  fetch(url)
+      //    .then((res) => res.blob())
+      //    .then((blob) => {
+      //      const file = new File([blob], "File name", { type: "image/png" });
+      //    });
+        
+      // const imageSrc = webcamRef.current.getScreenshot();
+      // const blob = await fetch(imageSrc).then((res) => res.blob());
+      // const formData = new FormData();
+
+      // formData.append("images", blob);

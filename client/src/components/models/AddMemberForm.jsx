@@ -9,6 +9,7 @@ import {
   Stack,
   Button,
   InputAdornment,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 // date
@@ -23,12 +24,14 @@ import ImageIcon from "@mui/icons-material/Image";
 // webcame
 // modal
 import CameraModal from "./CameraModal";
+import { addMember } from "../../services";
+import axios from "axios";
 const membershipsPlans = {
   oneMonth: 1,
   twoMonth: 2,
 };
 
-const AddMemberForm = ({ setModalOpen }) => {
+const AddMemberForm = ({ setModalOpen, fetchMembers }) => {
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [paidAmount, setPaidAmount] = useState(0);
@@ -67,9 +70,62 @@ const AddMemberForm = ({ setModalOpen }) => {
     setAmountLeft(amountLeft);
   }, [paidAmount, totalAmount]);
 
+  const [loadingUpload, setLoadingUpload] = useState(false);
   // handle submit
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    // const photoToUplad =
+    try {
+      setLoadingUpload(true);
+      const formData = new FormData();
+      const customId = crypto.randomUUID();
+      let newPhoto
+      let blob
+      if (typeof photo === "object") {
+         blob = photo?.slice(0, photo?.size, photo?.type);
+         newPhoto = new File(
+          [blob],
+          customId + "." + photo.name.substr(photo.name.lastIndexOf(".") + 1),
+          { type: photo?.type }
+        );
+        
+      } else if (typeof photo === "string") {
+        console.log(photo)
+        
+        //  newPhoto = new File(
+        //   [blob],
+        //   customId + "." + photo.name.substr(photo.name.lastIndexOf(".") + 1),
+        //   { type: photo?.type }
+        // );
+
+    
+      }
+
+      formData.append("photoUpload", newPhoto);
+      formData.append("photo", newPhoto.name);
+      formData.append("id", customId);
+      formData.append("fullName", fullName);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("startDate", startDate);
+      formData.append("endDate", endDate);
+      formData.append("totalAmount", totalAmount);
+      formData.append("paidAmount", paidAmount);
+      formData.append("amountLeft", amountLeft);
+      formData.append(
+        "membership",
+        selectedMembership === membershipsPlans.oneMonth
+          ? "1 month"
+          : "2 months"
+      );
+
+      await addMember(formData);
+    } catch (error) {
+      console.log(error);
+    }
+    setLoadingUpload(false);
+    setModalOpen(false);
+    fetchMembers();
+    onCancel()
   }
 
   function onCancel() {
@@ -77,15 +133,19 @@ const AddMemberForm = ({ setModalOpen }) => {
     setFullName("");
     setPhoneNumber("");
     setPaidAmount(0);
-    setPhoto("");
+    setPhoto(null);
     setModalOpen(false);
   }
 
+  const matches = useMediaQuery("(min-width:750px)");
   return (
-    <Box>
-      <form onSubmit={handleSubmit}>
+    <Box sx={{ overflowY: "scroll", maxHeight: "80vh" }}>
+      <form onSubmit={handleSubmit} method="post" encType="multipart/form-data">
         <FormGroup>
-          <Stack gap={3} direction={"row"}>
+          <Stack
+            gap={3}
+            direction={matches ? "row" : "column"}
+          >
             <Stack flex={0.7} mt={"1.1rem"}>
               <PhotoPicker value={photo} onChange={setPhoto} />
               <Button
@@ -199,7 +259,11 @@ const AddMemberForm = ({ setModalOpen }) => {
                 <Button onClick={onCancel} variant="outlined">
                   Cancel
                 </Button>
-                <Button type="submit" variant="contained">
+                <Button
+                  type="submit"
+                  disabled={loadingUpload}
+                  variant="contained"
+                >
                   Save
                 </Button>
               </Stack>
@@ -236,15 +300,11 @@ function CustomInput({
   );
 }
 function PhotoPicker({ value, onChange }) {
-
   const imageSource = useCallback(() => {
-    if (value==null || value==undefined) 
-      return "./public/avatar.svg"     
-    if(typeof value==="string") return value
-    if(typeof value==="object") return URL.createObjectURL(value)
-    
-  },[value,onChange])
-  console.log(typeof value);
+    if (value == null || value == undefined) return "http://localhost:3001/photos/avatar.svg";
+    if (typeof value === "string") return value;
+    if (typeof value === "object") return URL.createObjectURL(value);
+  }, [value, onChange]);
   return (
     <Button
       sx={{
@@ -280,7 +340,12 @@ function PhotoPicker({ value, onChange }) {
           }}
         />
       </Box>
-      <input type="file" onChange={(e) => onChange(e.target.files[0])} hidden />
+      <input
+        type="file"
+        name="photo"
+        onChange={(e) => onChange(e.target.files[0])}
+        hidden
+      />
     </Button>
   );
 }
