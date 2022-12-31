@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material"
+import { Box, Button, Stack } from "@mui/material"
 import { useCallback } from "react"
 import ImageIcon from '@mui/icons-material/Image'
 export default function PhotoPicker({ value,onChange }) {
@@ -10,46 +10,49 @@ export default function PhotoPicker({ value,onChange }) {
     if (typeof value === "object") return URL.createObjectURL(value);
   }, [value, onChange]);
   return (
-    <Button
-      sx={{
-        position: "relative",
-        borderRadius: "100%",
-        width: "150px",
-        height: "150px",
-        mx: "auto",
-      }}
-      variant="outlined"
-      component="label"
-    >
-      <Box sx={{ position: "absolute", inset: "0" }}>
-        <Box
-          component={"img"}
-          sx={{
-            position: "absolute",
-            width: "150px",
-            height: "150px",
-            borderRadius: "100%",
-            objectFit: "cover",
-          }}
-          src={imageSource()}
-          alt="person"
-        />
+    <Stack position={"relative"}>
+      <Button
+        sx={{
+          position: "relative",
+          borderRadius: "100%",
+          width: "150px",
+          height: "150px",
+          mx: "auto",
+        }}
+        variant="outlined"
+        component="label"
+      >
+        <Box sx={{ position: "absolute", inset: "0" }}>
+          <Box
+            component={"img"}
+            sx={{
+              position: "absolute",
+              width: "150px",
+              height: "150px",
+              borderRadius: "100%",
+              objectFit: "cover",
+            }}
+            src={imageSource()}
+            alt="person"
+          />
 
-        <ImageIcon
-          sx={{
-            position: "absolute",
-            top: "80%",
-            left: "80%",
-            scale: "1.2",
-          }}
+          <ImageIcon
+            sx={{
+              position: "absolute",
+              top: "80%",
+              left: "80%",
+              scale: "1.2",
+            }}
+          />
+        </Box>
+        <input
+          type="file"
+          name="photo"
+          onChange={(e) => onChange(e.target.files[0])}
+          hidden
         />
-      </Box>
-      <input
-        type="file"
-        name="photo"
-        onChange={(e) => onChange(e.target.files[0])}
-        hidden
-      />
-    </Button>
+      </Button>
+      
+    </Stack>
   );
 }

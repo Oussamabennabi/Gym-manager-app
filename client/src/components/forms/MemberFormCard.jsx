@@ -1,10 +1,10 @@
 import { Box, useMediaQuery } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import MemberForm from "../forms/MemberForm";
-import { addMember, getMember } from "../../services";
+import MemberForm from "./MemberForm";
+import { addMember, getMember, updateMember } from "../../services";
 import { PLANS } from "../../constants";
 import { formatDate } from "../../utils/formatDate";
-const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
+const MemberFormCard = ({ setModalOpen, fetchMembers, memberId ,setMemberId}) => {
   // state
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -20,7 +20,7 @@ const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
     const currentMonth = new Date();
     return new Date(currentMonth.setMonth(currentMonth.getMonth() + 1));
   });
-  const [loadingUpload, setLoadingUpload] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // end of state
 
@@ -49,7 +49,7 @@ const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
     if (memberId == null || memberId == "") return;
     const main = async () => {
       try {
-        const [data] = await getMember(memberId);
+        const data = await getMember(memberId);
         setFullName(data.fullName);
         setPhoneNumber(data.phoneNumber);
         setAge(data.age);
@@ -57,7 +57,6 @@ const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
         setPhoto(data.photo);
         setStartDate(data.startDate);
         setSelectedMembership(Number(data.membership?.split(" ")[0]));
-        console.log(data)
       } catch (error) {
         console.log(error);
       }
@@ -65,19 +64,22 @@ const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
     main();
   }, [memberId]);
 
-  async function getPhotoFile(photo, name) {
+  async function getPhotoFile(name) {
     let newPhoto;
     try {
       let blob;
+      if(!photo) return null
       if (typeof photo === "object") {
         blob = photo?.slice(0, photo?.size, photo?.type);
+        const photoName =name + "." + photo.name.substr(photo.name.lastIndexOf(".") + 1);
         newPhoto = new File(
           [blob],
-          name + "." + photo.name.substr(photo.name.lastIndexOf(".") + 1),
+          photoName,
           { type: photo?.type }
         );
       } else if (typeof photo === "string") {
-        blob = await fetch(photo).then((res) => res.blob());
+        if (!photo.startsWith("data:image/jpeg;base64,")) return photo
+          blob = await fetch(photo).then((res) => res.blob());
         newPhoto = new File([blob], name + "." + blob.type.split("/")[1], {
           type: blob.type,
         });
@@ -87,27 +89,44 @@ const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
     }
     return newPhoto;
   }
-  async function getFormData(data = null) {
+  async function getFormData() {
     const formData = new FormData();
+
     const customId = crypto.randomUUID();
   
     try {
-      const newPhoto = await getPhotoFile(photo, data?data.id:customId);
-      formData.append("photoUpload", data ? data.newPhoto : newPhoto);
-      formData.append("photo", data ? data.newPhoto.name : newPhoto.name);
+      const newPhoto = await getPhotoFile(memberId ? memberId : customId);
+      if (newPhoto) {
+        //  if it is not a file
+        if (typeof newPhoto === "object") {
+          formData.append("photoUpload", newPhoto);
+          formData.append("photo",newPhoto.name);
+          
+        } else {
+ 
+          const photoName =
+            photo === "avatar.svg"
+              ? photo
+              : memberId + "." + newPhoto.split(".")[1];
+
+          formData.append("photo",photoName);
+        }
+      } else {
+        formData.append("photo", "avatar.svg");
+        
+      }
     } catch (error) {
       console.log(error);
     }
-
-    formData.append("id", data ? data.id : customId);
-    formData.append("fullName", data ? data.fullName : fullName);
-    formData.append("phoneNumber", data ? data.phoneNumber : phoneNumber);
-    formData.append("age", data ? data.age : age);
-    formData.append("startDate", data ? data.startDate : startDate);
-    formData.append("endDate", data ? data.endDate : endDate);
-    formData.append("totalAmount", data ? data.totalAmount : totalAmount);
-    formData.append("paidAmount", data ? data.paidAmount : paidAmount);
-    formData.append("amountLeft", data ? data.amountLeft : amountLeft);
+    formData.append("id",memberId?memberId:  customId);
+    formData.append("fullName",  fullName);
+    formData.append("phoneNumber",  phoneNumber);
+    formData.append("age",  age);
+    formData.append("startDate",  startDate);
+    formData.append("endDate",  endDate);
+    formData.append("totalAmount",  totalAmount);
+    formData.append("paidAmount",  paidAmount);
+    formData.append("amountLeft",  amountLeft);
 
     formData.append(
       "membership",
@@ -115,28 +134,23 @@ const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
     );
     return formData;
   }
-
   // handle submit
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      setLoadingUpload(true);
+      setLoading(true);
       if (memberId) {
-        console.log("editing member");
-        const formData = {}
-        await updateMember(memberId,formData)
-
-        // edit state
+        await updateMember(memberId, await getFormData());
+        setMemberId("")
       } else {
-        console.log("adding member");
         await addMember(await getFormData());
       }
     } catch (error) {
       console.log(error);
     }
-    setLoadingUpload(false);
+    setLoading(false);
     setModalOpen(false);
-    fetchMembers();
+    await fetchMembers();
     onCancel();
   }
 
@@ -145,14 +159,22 @@ const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
     setFullName("");
     setPhoneNumber("");
     setPaidAmount(0);
+    setAge(0);
     setPhoto(null);
     setModalOpen(false);
     setStartDate(new Date());
-    // setEndDate()
+    setMemberId("")
   }
 
   return (
-    <Box sx={{ overflowY: "scroll", maxHeight: "80vh" }}>
+    <Box
+      sx={{
+        overflowY: "scroll",
+        maxHeight: "80vh",
+        px: "1rem",
+        pb:"1rem"
+      }}
+    >
       <MemberForm
         state={{
           handleSubmit,
@@ -178,8 +200,7 @@ const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
           setStartDate,
           endDate,
           setEndDate,
-          loadingUpload,
-          setLoadingUpload,
+          loading,
           onCancel,
         }}
       />
@@ -187,4 +208,4 @@ const MemberInfoCard = ({ setModalOpen, fetchMembers, memberId }) => {
   );
 };
 
-export default MemberInfoCard;
+export default MemberFormCard;

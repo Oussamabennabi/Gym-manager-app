@@ -1,138 +1,75 @@
-import React, { useState } from "react";
-import { DataGrid, GridToolbar, GridToolbarDensitySelector } from "@mui/x-data-grid";
-import { Box, Button } from "@mui/material";
-import { formatDate } from "../utils/formatDate";
+import React from "react";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
 import { useCallback } from "react"
-const cols = [
-  {
-    field: "photo",
-    headerName: "Photo",
-    minWidth: 180,
+import { GRID_TABLE_COLS } from "../constants"
+
+const AllMembersList = ({
+  members = [],
+  setMemberModalOpen,
+  setDeleteMemberModalOpen,
+  setMemberId,
+}) => {
+  const editField = {
+    field: "Edit",
+    headerName: "Edit",
+    minWidth: 140,
+    align: "center",
+    headerAlign: "center",
     flex: 1,
     renderCell: (params) => {
       return (
         <div>
-          <Box
-            component={"img"}
-            src={
-              params.value != null
-                ? `http://localhost:3001/photos/${params.value}`
-                : "/avatar.svg"
-            }
-            alt="no photo"
-            sx={{ mx: "auto", width: 150, height: 150, objectFit: "cover" }}
-          />
+          <Button
+            onClick={() => {
+              setMemberModalOpen(true);
+              setMemberId(params.id);
+            }}
+          >
+<EditIcon/>          </Button>
         </div>
       );
     },
-  },
-  { field: "fullName", headerName: "Full name", minWidth: 180, flex: 1 },
-  { field: "phoneNumber", headerName: "Phone number", minWidth: 140, flex: 1 },
-
-  {
-    field: "age",
-    headerName: "Age",
-    type: "number",
-    minWidth: 90,
-    flex: 1,
-    headerAlign: "left",
-    align: "left",
-  },
-  {
-    field: "startDate",
-    headerName: "Start date",
-    minWidth: 150,
-    type: "dateTime",
-    valueGetter: ({ value }) => value && formatDate(value),
-    align: "left",
-    flex: 1,
-  },
-  {
-    field: "endDate",
-    headerName: "End date",
-    minWidth: 150,
-    type: "dateTime",
-    valueGetter: ({ value }) => value && formatDate(value),
-    align: "left",
-    flex: 1,
-  },
-  {
-    field: "totalAmount",
-    headerName: "Total amount",
-    minWidth: 120,
-    type: "number",
-    align: "left",
-    headerAlign: "left",
-    flex: 1,
-  },
-  {
-    field: "paidAmount",
-    headerName: "Paid",
-    minWidth: 120,
-    type: "number",
-    headerAlign: "left",
-    flex: 1,
-    align: "left",
-  },
-  {
-    field: "amountLeft",
-    headerName: "Amount left",
-    minWidth: 120,
-    type: "number",
-    align: "left",
-    headerAlign: "left",
-    flex: 1,
-  },
-  {
-    field: "membership",
-    headerName: "Membership plan",
+  };
+  const deleteField = {
+    field: "Delete",
+    headerName: "Delete",
     minWidth: 140,
-    align: "left",
-    headerAlign: "left",
+    align: "center",
+    headerAlign: "center",
     flex: 1,
-  },
- 
-];
-const AllMembersList = ({ members = [], setEditMemberModalOpen,setMemberId }) => {
+    renderCell: (params) => {
+      return (
+        <div>
+          <Button
+            onClick={() => {
+              setDeleteMemberModalOpen(true);
+              setMemberId(params.id);
+            }}
+          >
+            <DeleteForeverIcon color="error" />
+          </Button>
+        </div>
+      );
+    },
+  };
   const newCols = useCallback(
-    () => [
-      ...cols,
-      {
-        field:"Edit",
-        headerName: "Edit",
-        minWidth: 140,
-        align: "center",
-        headerAlign: "center",
-        flex: 1,
-        renderCell: (params) => {
-          return (
-            <div>
-              <Button
-                onClick={() => {
-                  setEditMemberModalOpen(true);
-                  setMemberId(params.id)
-                }}
-              >
-                <EditIcon />
-              </Button>
-            </div>
-          );
-        },
-      },
-    ],
+    () => [...GRID_TABLE_COLS, editField, deleteField],
     []
   );
   return (
     <div style={{ height: "90vh", width: "100%" }}>
       <DataGrid
-        rows={members}
+        rows={members||[]}
         columns={newCols()}
         components={{
           Toolbar: GridToolbar,
         }}
         pageSize={5}
-        rowHeight={150}
+        rowHeight={170}
         rowSpacingType="margin"
         rowsPerPageOptions={[5]}
       />

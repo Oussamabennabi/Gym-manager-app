@@ -15,6 +15,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import CustomInput from "../ui/CustomInput";
 import PhotoPicker from "../ui/PhotoPicker";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
 import CameraModal from "../models/CameraModal";
 import { PLANS } from "../../constants";
 
@@ -31,18 +33,35 @@ export default function MemberForm({ state }) {
         <Stack gap={3} direction={matches ? "row" : "column"}>
           <Stack flex={0.7} mt={"1.1rem"}>
             <PhotoPicker value={state.photo} onChange={state.setPhoto} />
-            <Button
-              onClick={() => state.setShowCamera(true)}
-              sx={{
-                textTransform: "none",
-                fontWeight: "bold",
-                my: "1rem",
-                mt: "1.8rem",
-              }}
-              variant={"contained"}
+            <Stack
+              gap={2}
+              mt={"1.8rem"}
+              direction={"row"}
+              justifyContent="space-between"
+              alignItems={"center"}
             >
-              Take a photo <CameraAltIcon sx={{ ml: "10px" }} />
-            </Button>
+              <Button
+                onClick={() => state.setShowCamera(true)}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: "bold",
+                  flex: "1",
+                }}
+                variant={"contained"}
+              >
+                Take a photo <CameraAltIcon sx={{ ml: "10px" }} />
+              </Button>
+              {state.photo && state.photo!=="avatar.svg" && (
+                <Button
+                  onClick={() => state.setPhoto(null)}
+                  variant="contained"
+                  color="error"
+                  sx={{ flex: ".2" }}
+                >
+                  <DeleteForeverIcon />
+                </Button>
+              )}
+            </Stack>
 
             {state.showCamera && (
               <CameraModal
@@ -146,7 +165,7 @@ export default function MemberForm({ state }) {
               </Button>
               <Button
                 type="submit"
-                disabled={state.loadingUpload}
+                disabled={state.loading}
                 variant="contained"
               >
                 Save

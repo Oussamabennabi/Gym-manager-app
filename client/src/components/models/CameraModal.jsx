@@ -58,6 +58,7 @@ export default function Camera({ open, setOpen,setpicture }) {
           videoConstraints={videoConstraints}
         >
           {({ getScreenshot }) => (
+      
             <Button
               onClick={() => {
                 const imageSrc = getScreenshot();
@@ -69,6 +70,8 @@ export default function Camera({ open, setOpen,setpicture }) {
             >
               Capture photo
             </Button>
+          
+         
           )}
         </Webcam>
       </Stack>

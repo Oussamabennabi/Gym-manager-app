@@ -1,11 +1,9 @@
+import {DATE_FORMATE} from '../constants'
 export function formatDate(date) {
-  var d = new Date(date),
-    month = "" + (d.getMonth() + 1),
-    day = "" + d.getDate(),
-    year = d.getFullYear();
-
-  if (month.length < 2) month = "0" + month;
-  if (day.length < 2) day = "0" + day;
-
-  return [year, month, day].join("-");
+  const newDate = new Date(date)
+  const f = new Intl.DateTimeFormat("en-us", {
+ 
+    dateStyle:DATE_FORMATE
+  })
+  return f.format(newDate)
 }
