@@ -59,13 +59,13 @@ const Navbar = ({
       </Button>
       <FormControl sx={{ width: "240px" ,ml:"auto"}}>
         <InputLabel id="time-before-send-notification">
-          Send Notification
+          Send Notification Before
         </InputLabel>
 
         <Select
           title="send notification of expired members before the desired day"
           labelId="time-before-send-notification"
-          label="Send Notification"
+          label="Send Notification Before"
           value={timeBeforeSendNotification}
           onChange={(e) => {
             setTimeBeforeSendNotification(e.target.value);

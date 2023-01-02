@@ -51,7 +51,7 @@ export default function MemberForm({ state }) {
               >
                 Take a photo <CameraAltIcon sx={{ ml: "10px" }} />
               </Button>
-              {state.photo && state.photo!=="avatar.svg" && (
+              {state.photo && state.photo !== "avatar.svg" && (
                 <Button
                   onClick={() => state.setPhoto(null)}
                   variant="contained"

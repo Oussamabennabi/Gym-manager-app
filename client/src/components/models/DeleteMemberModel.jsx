@@ -1,9 +1,9 @@
-import { Box, Button, Stack, Typography } from '@mui/material'
-import React from 'react'
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { deleteMember, getMember } from '../../services'
-import DefaultModal from './DefaultModal'
+import { Box, Button, Stack, Typography } from "@mui/material";
+import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
+import { deleteMember, getMember } from "../../services";
+import DefaultModal from "./DefaultModal";
 const DeleteMemberModel = ({
   open,
   setOpen,
@@ -14,7 +14,7 @@ const DeleteMemberModel = ({
   const [member, setMember] = useState(null);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    if(!memberId) return
+    if (!memberId) return;
     const main = async () => {
       try {
         setMember(await getMember(memberId));
@@ -52,9 +52,14 @@ const DeleteMemberModel = ({
         justifyContent={"center"}
         alignItems="center"
       >
-        <Box width="150px" height="150px" sx={{objectFit:"cover"}} src={'http://localhost:3001/photos/'+member?.photo} component={"img"}/>
+        <Box
+          width="150px"
+          height="150px"
+          sx={{ objectFit: "cover" }}
+          src={"http://localhost:3001/photos/" + member?.photo}
+          component={"img"}
+        />
 
-        
         <Typography sx={{ fontWeight: "bold" }} variant="h6">
           Are You sure you want to delete :{" "}
         </Typography>
@@ -75,4 +80,4 @@ const DeleteMemberModel = ({
   );
 };
 
-export default DeleteMemberModel
+export default DeleteMemberModel;

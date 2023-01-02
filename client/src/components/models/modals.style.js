@@ -12,6 +12,6 @@ export const styles = {
     borderRadius: "1rem",
     pt: "1rem",
     pb: ".5rem",
-    px:".2rem"
+    px: ".2rem",
   },
 };

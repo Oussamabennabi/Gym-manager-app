@@ -35,7 +35,7 @@ const DefaultModal = ({
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                p:"0rem 1rem"
+                p: "0rem 1rem",
               }}
             >
               <Typography variant="h5" sx={{ fontWeight: "bold" }}>

@@ -1,9 +1,15 @@
-import { Button, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { Stack } from "@mui/system";
 import { useCallback, useEffect, useState } from "react";
 import Webcam from "react-webcam";
 import DefaultModal from "./DefaultModal";
-export default function Camera({ open, setOpen,setpicture }) {
+export default function Camera({ open, setOpen, setpicture }) {
   const videoConstraints = {
     width: 400,
     height: 400,
@@ -29,7 +35,7 @@ export default function Camera({ open, setOpen,setpicture }) {
       modalHeaderTitle={"take a photo"}
       setOpen={setOpen}
     >
-      <Stack>
+      <Stack mx={1} mb={1}>
         {/* <FormControl sx={{ my: "1rem" }} fullWidth>
           <InputLabel id="Devices">Devices</InputLabel>
           <Select
@@ -54,29 +60,23 @@ export default function Camera({ open, setOpen,setpicture }) {
           screenshotFormat="image/jpeg"
           height={400}
           width={400}
-     
           videoConstraints={videoConstraints}
         >
           {({ getScreenshot }) => (
-      
             <Button
               onClick={() => {
                 const imageSrc = getScreenshot();
-                setpicture(imageSrc)
-                setOpen(false)
+                setpicture(imageSrc);
+                setOpen(false);
               }}
-              sx={{fontWeight:"bold",textTransform:"none"}}
+              sx={{ fontWeight: "bold", textTransform: "none" }}
               variant="contained"
             >
               Capture photo
             </Button>
-          
-         
           )}
         </Webcam>
       </Stack>
     </DefaultModal>
   );
 }
-
-

@@ -16,7 +16,7 @@ const AllMembersList = ({
   const editField = {
     field: "Edit",
     headerName: "Edit",
-    minWidth: 140,
+    minWidth: 110,
     align: "center",
     headerAlign: "center",
     flex: 1,
@@ -37,7 +37,7 @@ const AllMembersList = ({
   const deleteField = {
     field: "Delete",
     headerName: "Delete",
-    minWidth: 140,
+    minWidth: 110,
     align: "center",
     headerAlign: "center",
     flex: 1,

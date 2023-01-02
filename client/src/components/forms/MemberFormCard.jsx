@@ -4,7 +4,12 @@ import MemberForm from "./MemberForm";
 import { addMember, getMember, updateMember } from "../../services";
 import { PLANS } from "../../constants";
 import { formatDate } from "../../utils/formatDate";
-const MemberFormCard = ({ setModalOpen, fetchMembers, memberId ,setMemberId}) => {
+const MemberFormCard = ({
+  setModalOpen,
+  fetchMembers,
+  memberId,
+  setMemberId,
+}) => {
   // state
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -68,18 +73,15 @@ const MemberFormCard = ({ setModalOpen, fetchMembers, memberId ,setMemberId}) =>
     let newPhoto;
     try {
       let blob;
-      if(!photo) return null
+      if (!photo) return null;
       if (typeof photo === "object") {
         blob = photo?.slice(0, photo?.size, photo?.type);
-        const photoName =name + "." + photo.name.substr(photo.name.lastIndexOf(".") + 1);
-        newPhoto = new File(
-          [blob],
-          photoName,
-          { type: photo?.type }
-        );
+        const photoName =
+          name + "." + photo.name.substr(photo.name.lastIndexOf(".") + 1);
+        newPhoto = new File([blob], photoName, { type: photo?.type });
       } else if (typeof photo === "string") {
-        if (!photo.startsWith("data:image/jpeg;base64,")) return photo
-          blob = await fetch(photo).then((res) => res.blob());
+        if (!photo.startsWith("data:image/jpeg;base64,")) return photo;
+        blob = await fetch(photo).then((res) => res.blob());
         newPhoto = new File([blob], name + "." + blob.type.split("/")[1], {
           type: blob.type,
         });
@@ -93,40 +95,37 @@ const MemberFormCard = ({ setModalOpen, fetchMembers, memberId ,setMemberId}) =>
     const formData = new FormData();
 
     const customId = crypto.randomUUID();
-  
+
     try {
       const newPhoto = await getPhotoFile(memberId ? memberId : customId);
       if (newPhoto) {
         //  if it is not a file
         if (typeof newPhoto === "object") {
           formData.append("photoUpload", newPhoto);
-          formData.append("photo",newPhoto.name);
-          
+          formData.append("photo", newPhoto.name);
         } else {
- 
           const photoName =
             photo === "avatar.svg"
               ? photo
               : memberId + "." + newPhoto.split(".")[1];
 
-          formData.append("photo",photoName);
+          formData.append("photo", photoName);
         }
       } else {
         formData.append("photo", "avatar.svg");
-        
       }
     } catch (error) {
       console.log(error);
     }
-    formData.append("id",memberId?memberId:  customId);
-    formData.append("fullName",  fullName);
-    formData.append("phoneNumber",  phoneNumber);
-    formData.append("age",  age);
-    formData.append("startDate",  startDate);
-    formData.append("endDate",  endDate);
-    formData.append("totalAmount",  totalAmount);
-    formData.append("paidAmount",  paidAmount);
-    formData.append("amountLeft",  amountLeft);
+    formData.append("id", memberId ? memberId : customId);
+    formData.append("fullName", fullName);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("age", age);
+    formData.append("startDate", startDate);
+    formData.append("endDate", endDate);
+    formData.append("totalAmount", totalAmount);
+    formData.append("paidAmount", paidAmount);
+    formData.append("amountLeft", amountLeft);
 
     formData.append(
       "membership",
@@ -141,7 +140,7 @@ const MemberFormCard = ({ setModalOpen, fetchMembers, memberId ,setMemberId}) =>
       setLoading(true);
       if (memberId) {
         await updateMember(memberId, await getFormData());
-        setMemberId("")
+        setMemberId("");
       } else {
         await addMember(await getFormData());
       }
@@ -163,7 +162,7 @@ const MemberFormCard = ({ setModalOpen, fetchMembers, memberId ,setMemberId}) =>
     setPhoto(null);
     setModalOpen(false);
     setStartDate(new Date());
-    setMemberId("")
+    setMemberId("");
   }
 
   return (
@@ -172,7 +171,7 @@ const MemberFormCard = ({ setModalOpen, fetchMembers, memberId ,setMemberId}) =>
         overflowY: "scroll",
         maxHeight: "80vh",
         px: "1rem",
-        pb:"1rem"
+        pb: "1rem",
       }}
     >
       <MemberForm

@@ -2,62 +2,21 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const path = require("path");
-const fs = require("fs");
 const app = express();
-
-const DATA_PATH = `${path.join(__dirname, "data.json")}`;
-const UPLOAD_DIR = "./public/photos";
+const { UPLOAD_DIR } = require("./constants");
+const {
+  readFromFile,
+  writeToFile,
+  deleteFile,
+  deleteOldPhoto,
+} = require("./utils");
 
 app.use(cors());
 app.use(bodyParser.json());
 
-const { promisify } = require("util");
-const unlinkAsync = promisify(fs.unlink);
-
 // MULTER
 app.use("/photos", express.static(path.join(__dirname, UPLOAD_DIR)));
 const multer = require("multer");
-
-async function deleteOldPhoto(originalname) {
-  const { json } = readFromFile();
-
-  const member = json.find(
-    (member) => member.id === originalname.split(".")[0]
-  );
-  if (!member) {
-    return;
-  }
-
-  const oldFileName = member.photo;
-
-  const deleteFileError = await deleteFile(oldFileName);
-  if (deleteFileError) {
-    console.log(deleteFileError);
-  }
-}
-
-async function deleteFile(fileName) {
-  let error = null;
-  if (fileName === "avatar.svg") return;
-  const relativePath = path.join(__dirname, UPLOAD_DIR, fileName);
-
-  if (fs.existsSync(relativePath)) {
-    await unlinkAsync(relativePath)
-      .then((_) => console.log("file was deleted with", relativePath))
-      .catch((err) => (error = err));
-  }
-  return error;
-}
-
-function readFromFile() {
-  const json = fs.readFileSync(DATA_PATH, "utf-8");
-  return { json: JSON.parse(json) };
-}
-
-function writeToFile(data) {
-  const json = JSON.stringify(data);
-  fs.writeFileSync(DATA_PATH, json, "utf-8");
-}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -72,6 +31,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ dest: UPLOAD_DIR, storage });
 // END OF MULTER
+
+// ROUTES :
 
 // get all members
 app.get("/members", (req, res) => {

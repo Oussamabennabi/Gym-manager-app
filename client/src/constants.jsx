@@ -1,5 +1,7 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { formatDate } from "./utils/formatDate";
+import TimeAgo from "react-timeago";
+
 export const PLANS = {
   oneMonth: 1,
   twoMonth: 2,
@@ -9,31 +11,31 @@ export const DATE_FORMATE = "medium"; // "long","full","short"
 
 export const TIME_BEFORE_SEND_NOTIFICATION_OPTIONS = [
   {
-    label: "in 1 Day",
+    label: "1 Day",
     valueInDays: 1,
   },
   {
-    label: "in 2 Days",
+    label: "2 Days",
     valueInDays: 2,
   },
   {
-    label: "in 3 Days",
+    label: "3 Days",
     valueInDays: 3,
   },
   {
-    label: "in 4 Days",
+    label: "4 Days",
     valueInDays: 4,
   },
   {
-    label: "in 5 Days",
+    label: "5 Days",
     valueInDays: 5,
   },
   {
-    label: "in 6 Days",
+    label: "6 Days",
     valueInDays: 6,
   },
   {
-    label: "in 7 Days",
+    label: "7 Days",
     valueInDays: 7,
   },
 ];
@@ -91,25 +93,18 @@ export const GRID_TABLE_COLS = [
     valueGetter: ({ value }) => value && formatDate(value),
     align: "left",
     flex: 1,
-  },
-  {
-    field: "status",
-    headerName: "Status",
-    minWidth: 150,
-    type: "boolean",
-    // valueGetter: ({ value }) => value && formatDate(value),
     renderCell: (params) => {
-      const active = false
-      console.log(params)
-      return <Button variant="contained" color={active?"success":"error"}>
-        {active?"Active":"Inactive"}
-      </Button>
-    },
-    align: "center",
-    headerAlign: "left",
+      const nowDate = new Date();
+      const active = Number(nowDate) <= Number(new Date(params.value));
 
-    flex: 1,
+      return (
+        <Typography fontSize={"inherit"} color={active ? "green" : "red"} component="div">
+          {formatDate(params.value)}
+        </Typography>
+      );
+    },
   },
+
   {
     field: "totalAmount",
     headerName: "Total amount",
@@ -144,5 +139,47 @@ export const GRID_TABLE_COLS = [
     align: "left",
     headerAlign: "left",
     flex: 1,
+  },
+  {
+    field: "status",
+    headerName: "Status",
+    minWidth: 120,
+    type: "boolean",
+    valueGetter: (params) => {
+      const nowDate = new Date();
+      const active = Number(nowDate) <= Number(new Date(params.row.endDate));
+      return active;
+    },
+    renderCell: (params) => {
+      const nowDate = new Date();
+      const active = Number(nowDate) <= Number(new Date(params.row.endDate));
+      return (
+        <Button
+          disableTouchRipple
+          disableFocusRipple
+          disableElevation
+          variant="contained"
+          sx={{ cursor: "default", fontWeight: "bold", textTransform: "none" }}
+          color={active ? "success" : "error"}
+        >
+          {active ? "Active" : "Inactive"}
+        </Button>
+      );
+    },
+    align: "left",
+    headerAlign: "left",
+
+    flex: 1,
+  },
+  {
+    field: "Ends In",
+    headerName: "Ends in",
+    minWidth: 150,
+    align: "center",
+    headerAlign: "left",
+    flex: 1,
+    renderCell: (params) => {
+      return <TimeAgo date={new Date(params.row.endDate)} />;
+    },
   },
 ];
