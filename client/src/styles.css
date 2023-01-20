@@ -5,6 +5,18 @@ body {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
+
+#App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+}
+.app-content {
+  display:contents;
+}
+
 *::-webkit-scrollbar {
   width: 7px;
   height: 10px;
@@ -23,4 +35,4 @@ body {
 /* Handle on hover */
 *::-webkit-scrollbar-thumb:hover {
   background: rgb(85, 85, 85);
-}
+} 

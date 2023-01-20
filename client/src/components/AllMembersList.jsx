@@ -61,8 +61,10 @@ const AllMembersList = ({
     []
   );
   return (
-    <div style={{ height: "90vh", width: "100%" }}>
+    <div style={{  flex:"1 1 auto",width:"100%",height:"calc(100vh - 100px)"}} >
       <DataGrid
+        // autoHeight
+        sx={{}}
         rows={members||[]}
         columns={newCols()}
         components={{

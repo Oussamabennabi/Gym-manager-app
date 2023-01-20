@@ -11,6 +11,7 @@ import {
   FormControl,
   IconButton,
   InputLabel,
+  Link,
   MenuItem,
   Select,
   Stack,
@@ -39,10 +40,10 @@ const Navbar = ({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <Stack
-      mx={3}
+      px={"2rem"}
       justifyContent={"flex-start"}
       alignItems={"center"}
-      sx={{ height: "10vh" }}
+      sx={{ height: "100px", flex: "0 1 auto", width: "100%" }}
       direction={"row"}
       gap={4}
     >
@@ -52,12 +53,16 @@ const Navbar = ({
           setMemberId("");
         }}
         variant="contained"
-        
-        sx={{textTransform:"none",fontWeight:"bold",width:"200px",height:"60%"}}
+        sx={{
+          textTransform: "none",
+          fontWeight: "bold",
+          width: "200px",
+          height: "60%",
+        }}
       >
         Add Member
       </Button>
-      <FormControl sx={{ width: "240px" ,ml:"auto"}}>
+      <FormControl sx={{ width: "240px", ml: "auto" }}>
         <InputLabel id="time-before-send-notification">
           Send Notification Before
         </InputLabel>
@@ -67,12 +72,18 @@ const Navbar = ({
           labelId="time-before-send-notification"
           label="Send Notification Before"
           value={timeBeforeSendNotification}
+          // sx={{color:"GrayText"}}
+          variant="outlined"
           onChange={(e) => {
             setTimeBeforeSendNotification(e.target.value);
           }}
         >
           {TIME_BEFORE_SEND_NOTIFICATION_OPTIONS.map((option) => (
-            <MenuItem sx={{py:".7rem"}} key={option.valueInDays} value={option}>
+            <MenuItem
+              sx={{ py: ".7rem" }}
+              key={option.valueInDays}
+              value={option}
+            >
               {option.label}
             </MenuItem>
           ))}
@@ -125,6 +136,10 @@ const Navbar = ({
               ))}
             </Stack>
           )}
+          <Typography mt={"auto"} component={"small"} fontSize=".8rem" textAlign={"center"}>
+            made by{" "}
+            <Link href="oussama-bennabi.netlify.app">Oussama Bennabi</Link>
+          </Typography>
         </Stack>
       </Drawer>
       <IconButton

@@ -18,6 +18,8 @@ export default function CustomInput({
           startAdornment: startAdornment ? startAdornment : null,
         }}
         label={label}
+        // sx={{
+        //   outlineColor: "white", backgroundColor: "#363c5e"}}
         variant="standard"
         {...props}
       />
